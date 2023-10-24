@@ -63,6 +63,7 @@ function sendEmail(recipientEmail, pdfPath) {
 }
 
 app.use('/send-email', async (req, res) => {
+  res.send("Hello")
   try {
     const recipientEmail = req.body.recipient_email;
     const userInformation = req.body.userInformation;
