@@ -14,7 +14,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post("/send-email", (req,res)=>{
+app.use("/send-email", (req,res)=>{
   client.sendEmail({
   "From": "ncby9zfs7@vossie.net",
   "To": "ncby9zfs7@vossie.net",
