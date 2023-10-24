@@ -56,6 +56,10 @@ function sendEmail(recipientEmail, pdfPath) {
   });
 }
 
+app.get("/", (req,res)=>{
+    res.send("Hello Yams")
+})
+
 app.use('/send-email', async (req, res) => {
   res.end(req.body)
   try {
