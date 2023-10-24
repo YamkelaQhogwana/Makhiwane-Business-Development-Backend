@@ -79,6 +79,7 @@ app.post('/send-email', async (req, res) => {
       .join('');
 
     if (!recipientEmail) {
+      res.send("Email does not exist")
       return res.status(400).json({ message: 'Recipient email is required' });
     }
 
@@ -281,16 +282,20 @@ app.post('/send-email', async (req, res) => {
     secondEmailTransporter.sendMail(secondEmailConfigs, (error, info) => {
       if (error) {
         console.error('Error sending second email:', error);
+        res.send(error);
       } else {
         console.log('Second email sent successfully');
+        res.send("All mail sent")
       }
     });
 
     res.json(response);
+    res.send(response);
   } catch (error) {
     // Handle errors here
     console.error('Error:', error);
     res.status(500).json({ message: 'An error has occurred' });
+    res.send(error)
   }
 });
 
