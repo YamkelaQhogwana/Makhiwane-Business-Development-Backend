@@ -12,15 +12,6 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.post("/send-email", (req, res) => {
-
-  const recipientEmail = req.body.recipient_email;
-  const userInformation = req.body.userInformation;
-  const { country, city, postalCode, address } = userInformation;
-  const cartItems = req.body.cartItems;
-  const total = req.body.total;
-  const date = req.body.date;
-  const invoiceNumber = req.body.invoiceNumber;
-
   const emailData = {
     From: "ncby9zfs7@vossie.net",
     To: "ncby9zfs7@vossie.net",
