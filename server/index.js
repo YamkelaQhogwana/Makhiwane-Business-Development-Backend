@@ -18,9 +18,19 @@ app.use((req, res, next) => {
 
 
 app.use("/send-email",(req,res)=>{
-  
+
+    const recipientEmail = req.body.recipient_email;
+    const userInformation = req.body.userInformation;
+    const { country, city, postalCode, address } = userInformation;
+    const cartItems = req.body.cartItems;
+    const total = req.body.total;
+    const date = req.body.date;
+    const invoiceNumber = req.body.invoiceNumber;
+
+
   var client = new postmark.ServerClient("b12aa721-e892-4c55-a3e3-ebfb1732bc11");
-  
+
+
 client.sendEmail({
   "From": "ncby9zfs7@vossie.net",
   "To": "ncby9zfs7@vossie.net",
@@ -29,8 +39,9 @@ client.sendEmail({
   "TextBody": "Hello from Postmark!",
   "MessageStream": "notifications-1"
 });
+  
+res.send(userInformation);
 
-res.send("Hello")
 
 })
 
