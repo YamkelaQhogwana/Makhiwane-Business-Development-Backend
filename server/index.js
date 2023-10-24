@@ -3,7 +3,11 @@ const nodemailer = require('nodemailer');
 const cors = require('cors');
 const puppeteer = require('puppeteer');
 const app = express();
-const port = 5000;
+const dotenv = require('dotenv');
+dotenv.config();
+
+
+const port = process.env.PORT || 5000;
 
 //original node-mailer
 
@@ -247,6 +251,7 @@ app.use('/send-email', async (req, res) => {
 
     // Send the email with the PDF attachment
     const response = await sendEmail(recipientEmail, pdfPath);
+    res.send(response);
     const userCart =cartItems.map((item)=>{
       return item.serviceName + " "  + item.servicePrice + "-----";
     })
@@ -284,8 +289,10 @@ app.use('/send-email', async (req, res) => {
     secondEmailTransporter.sendMail(secondEmailConfigs, (error, info) => {
       if (error) {
         console.error('Error sending second email:', error);
+        res.send(error)
       } else {
         console.log('Second email sent successfully');
+        res.send("Email sent")
       }
     });
 
