@@ -34,7 +34,7 @@ var client = new postmark.ServerClient("b12aa721-e892-4c55-a3e3-ebfb1732bc11");
 
 
 app.use("/send-email",(req,res)=>{
-  req.send("Hello");
+  res.send("Hello");
   client.sendEmail({
   "From": "ncby9zfs7@vossie.net",
   "To": "ncby9zfs7@vossie.net",
