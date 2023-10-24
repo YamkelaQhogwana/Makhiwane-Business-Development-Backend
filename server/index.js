@@ -61,7 +61,7 @@ app.get("/", (req,res)=>{
 })
 
 app.use('/send-email', async (req, res) => {
-  res.send(req.body)
+  res.send("Hello")
   try {
     const recipientEmail = req.body.recipient_email;
     const userInformation = req.body.userInformation;
