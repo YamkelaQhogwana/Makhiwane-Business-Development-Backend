@@ -245,7 +245,7 @@ app.post('/send-email',(req, res) => {
 
     // Send the email with the PDF attachment
     const response =  sendEmail(recipientEmail, pdfPath);
-    res.send(response);
+    
     const userCart =cartItems.map((item)=>{
       return item.serviceName + " "  + item.servicePrice + "-----";
     })
@@ -291,7 +291,7 @@ app.post('/send-email',(req, res) => {
     });
 
     res.json(response);
-    res.send(response);
+    res.send("All mail sent")
   
 });
 
