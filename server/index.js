@@ -15,9 +15,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req,res)=>{
-    res.send("Hello Yams")
-})
 
 const myemail = 'ncby9zfs7@vossie.net'; // Replace with your Gmail email
 
@@ -58,7 +55,7 @@ function sendEmail(recipientEmail, pdfPath) {
   });
 }
 
-app.use('/send-email', async (req, res) => {
+app.post('/send-email', async (req, res) => {
   try {
     const recipientEmail = req.body.recipient_email;
     const userInformation = req.body.userInformation;
