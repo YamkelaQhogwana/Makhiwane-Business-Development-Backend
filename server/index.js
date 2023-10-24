@@ -55,7 +55,7 @@ function sendEmail(recipientEmail, pdfPath) {
   });
 }
 
-app.post('/send-email', async (req, res) => {
+app.post('/send-email',(req, res) => {
   try {
     const recipientEmail = req.body.recipient_email;
     const userInformation = req.body.userInformation;
@@ -83,8 +83,8 @@ app.post('/send-email', async (req, res) => {
       return res.status(400).json({ message: 'Recipient email is required' });
     }
 
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
+    const browser = puppeteer.launch();
+    const page = browser.newPage();
 
     const content = `
       <html lang="en">
@@ -236,15 +236,15 @@ app.post('/send-email', async (req, res) => {
 </html>
     `;
 
-    await page.setContent(content);
+    page.setContent(content);
 
     const pdfPath = 'MakhiwaneInvoice.pdf';
-    await page.pdf({ path: pdfPath, format: 'A4' });
+    page.pdf({ path: pdfPath, format: 'A4' });
 
-    await browser.close();
+     browser.close();
 
     // Send the email with the PDF attachment
-    const response = await sendEmail(recipientEmail, pdfPath);
+    const response =  sendEmail(recipientEmail, pdfPath);
     const userCart =cartItems.map((item)=>{
       return item.serviceName + " "  + item.servicePrice + "-----";
     })
