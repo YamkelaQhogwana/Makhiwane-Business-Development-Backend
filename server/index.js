@@ -65,7 +65,7 @@ app.post('/send-email',(req, res) => {
     const date = req.body.date;
     const invoiceNumber = req.body.invoiceNumber;
 
-    res.send(userInformation);
+    
 
     const articleHTML = cartItems
       .map(
@@ -245,6 +245,7 @@ app.post('/send-email',(req, res) => {
 
     // Send the email with the PDF attachment
     const response =  sendEmail(recipientEmail, pdfPath);
+    res.send(response);
     const userCart =cartItems.map((item)=>{
       return item.serviceName + " "  + item.servicePrice + "-----";
     })
