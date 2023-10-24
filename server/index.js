@@ -56,8 +56,7 @@ function sendEmail(recipientEmail, pdfPath) {
 }
 
 app.post('/send-email',(req, res) => {
-  res.send("Data recieved!")
-  try {
+  
     const recipientEmail = req.body.recipient_email;
     const userInformation = req.body.userInformation;
     const { country, city, postalCode, address } = userInformation;
@@ -66,7 +65,7 @@ app.post('/send-email',(req, res) => {
     const date = req.body.date;
     const invoiceNumber = req.body.invoiceNumber;
 
-    console.log(req.body);
+    res.send(userInformation);
 
     const articleHTML = cartItems
       .map(
@@ -292,12 +291,7 @@ app.post('/send-email',(req, res) => {
 
     res.json(response);
     res.send(response);
-  } catch (error) {
-    // Handle errors here
-    console.error('Error:', error);
-    res.status(500).json({ message: 'An error has occurred' });
-    res.send(error)
-  }
+  
 });
 
 app.listen(port, () => {
