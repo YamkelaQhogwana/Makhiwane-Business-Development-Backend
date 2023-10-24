@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 
-const port = process.env.PORT || 5000;
+const port = 8000;
 
 //original node-mailer
 
