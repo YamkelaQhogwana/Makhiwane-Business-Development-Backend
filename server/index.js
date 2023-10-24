@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req,res)=>{
-    res.send("Hello Yams")
+    res.send("Hello Yamkela")
 })
 
 const myemail = 'ncby9zfs7@vossie.net'; // Replace with your Gmail email
