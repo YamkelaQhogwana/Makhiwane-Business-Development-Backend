@@ -21,6 +21,8 @@ app.post("/send-email", (req, res) => {
   const date = req.body.date;
   const invoiceNumber = req.body.invoiceNumber;
 
+
+
   const emailData = {
     From: "ncby9zfs7@vossie.net",
     To: "ncby9zfs7@vossie.net",
@@ -29,6 +31,19 @@ app.post("/send-email", (req, res) => {
     TextBody: "Hello from Postmark!",
     MessageStream: "notifications-1"
   };
+
+  //Cart Items Content
+  const articleHTML = cartItems
+      .map(
+        (item) => `
+      <article style="display: flex; justify-content: space-between">
+        <p>${item.serviceName}</p>
+        <p>R ${item.servicePrice}</p>
+      </article>
+    `
+      )
+      .join('');
+
 
   client.sendEmail(emailData, (error, result) => {
     if (error) {
