@@ -13,7 +13,6 @@ app.use((req, res, next) => {
 
 
 app.listen((5000, (req,res)=>{
-  console.log("The server has started")
 }))
 
 
@@ -31,5 +30,8 @@ client.sendEmail({
 });
 
 })
-// Send an email:
+app.listen(port, () => {
+  console.log(`nodemailerProject is listening at http://localhost:${port}`);
+});
+
 
