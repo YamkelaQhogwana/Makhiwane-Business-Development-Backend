@@ -12,8 +12,6 @@ app.use((req, res, next) => {
 });
 
 
-app.listen((5000, (req,res)=>{
-}))
 
 
 
@@ -30,6 +28,7 @@ client.sendEmail({
 });
 
 })
+
 app.listen(port, () => {
   console.log(`nodemailerProject is listening at http://localhost:${port}`);
 });
