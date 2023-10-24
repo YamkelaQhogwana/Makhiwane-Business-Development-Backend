@@ -1,7 +1,7 @@
 // Require:
 var postmark = require("postmark");
 const express = require("express");
-const core = require("cors");
+const cors = require("cors");
 const app =express();
 const port = 5000;
 
