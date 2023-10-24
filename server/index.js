@@ -9,9 +9,7 @@ app.listen((5000, (req,res)=>{
   console.log("The server has started")
 }))
 
-app.get("/",(req,res)=>{
-  "Hello"
-})
+
 
 app.post("/send-email",(req,res)=>{
   var client = new postmark.ServerClient("b12aa721-e892-4c55-a3e3-ebfb1732bc11");
