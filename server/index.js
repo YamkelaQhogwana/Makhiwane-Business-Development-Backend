@@ -1,6 +1,7 @@
 // Require:
 var postmark = require("postmark");
 const express = require("express");
+const core = require("cors");
 const app =express();
 const port = 5000;
 
@@ -13,13 +14,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/",(req,res)=>{
-  res.send("Hello")
-})
+
 
 
 app.use("/send-email",(req,res)=>{
-  res.send("Hello")
   var client = new postmark.ServerClient("b12aa721-e892-4c55-a3e3-ebfb1732bc11");
 
 client.sendEmail({
