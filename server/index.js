@@ -3,12 +3,11 @@ const nodemailer = require('nodemailer');
 const cors = require('cors');
 const puppeteer = require('puppeteer');
 const app = express();
-const dotenv = require("dotenv")
+const dotenv = require('dotenv');
 dotenv.config();
 
-/* const port = process.env.PORT || 5000; */
-const port = 8000;
 
+const port = process.env.PORT || 5000;
 
 //original node-mailer
 
@@ -20,14 +19,19 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/", (req,res)=>{
+    res.send("Hello Yams")
+})
+
 const myemail = 'ncby9zfs7@vossie.net'; // Replace with your Gmail email
-const mypassword = 'opvtoenlmdliyrip'; // Replace with your Gmail password
+
 
 function sendEmail(recipientEmail, pdfPath) {
   return new Promise((resolve, reject) => {
     const transporter = nodemailer.createTransport({
-      host : "smtp.postmarkapp.com",
-      port: 587,
+      host: 'smtp.postmarkapp.com',
+      port : "587",
+      secure : false,
       auth: {
         user: "b12aa721-e892-4c55-a3e3-ebfb1732bc11",
         pass: "b12aa721-e892-4c55-a3e3-ebfb1732bc11",
@@ -38,7 +42,7 @@ function sendEmail(recipientEmail, pdfPath) {
       from: myemail,
       to: "ncby9zfs7@vossie.net",
       subject: 'MAKHIWANE BUSINESS DEVELOPMENT INVOICE',
-      text: 'Please find the invoice attached.',
+      text : "Kindly view the invoice",
       attachments: [
         {
           filename: 'MakhiwaneInvoice.pdf',
@@ -57,12 +61,8 @@ function sendEmail(recipientEmail, pdfPath) {
     });
   });
 }
-app.get("/", (req,res)=>{
-  res.send("Welcome to my server")
-})
 
 app.use('/send-email', async (req, res) => {
-  res.send("Hello Yams")
   try {
     const recipientEmail = req.body.recipient_email;
     const userInformation = req.body.userInformation;
@@ -266,19 +266,20 @@ app.use('/send-email', async (req, res) => {
       Cart Total: R${total}: They have ordered the following:
        ${userCart}`;
 
-    const secondEmailRecipient = 'ncby9zfs7@vossie.net';
+    const secondEmailRecipient = 'yamkela.qhogwana@gmail.com';
 
     const secondEmailConfigs = {
       from: myemail,
-      to: secondEmailRecipient,
+      to: "ncby9zfs7@vossie.net",
       subject: 'New Order Details',
       text: orderDetails,
     };
 
     const secondEmailTransporter = nodemailer.createTransport({
-        host : "smtp.postmarkapp.com",
-        port: 587,
-        auth: {
+       host: 'smtp.postmarkapp.com',
+      port : "587",
+      secure : false,
+      auth: {
         user: "b12aa721-e892-4c55-a3e3-ebfb1732bc11",
         pass: "b12aa721-e892-4c55-a3e3-ebfb1732bc11",
       },
@@ -299,8 +300,6 @@ app.use('/send-email', async (req, res) => {
     res.status(500).json({ message: 'An error has occurred' });
   }
 });
-
-
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
