@@ -294,7 +294,7 @@ app.use('/send-email', async (req, res) => {
 });
 
 app.get("/", (req,res)=>{
-  "Welcome to my server"
+  res.send("Welcome to my server")
 })
 
 app.listen(port, () => {
