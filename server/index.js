@@ -56,6 +56,7 @@ function sendEmail(recipientEmail, pdfPath) {
 }
 
 app.post('/send-email',(req, res) => {
+  res.send("Data recieved!")
   try {
     const recipientEmail = req.body.recipient_email;
     const userInformation = req.body.userInformation;
