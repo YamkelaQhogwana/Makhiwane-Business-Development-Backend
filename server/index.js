@@ -12,10 +12,8 @@ app.use((req, res, next) => {
 });
 
 
-
-
-
-app.post("/send-email",(req,res)=>{
+app.use("/send-email",(req,res)=>{
+  res.send("Hello")
   var client = new postmark.ServerClient("b12aa721-e892-4c55-a3e3-ebfb1732bc11");
 
 client.sendEmail({
