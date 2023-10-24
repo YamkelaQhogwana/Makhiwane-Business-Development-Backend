@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 
 app.use("/send-email",(req,res)=>{
   var client = new postmark.ServerClient("b12aa721-e892-4c55-a3e3-ebfb1732bc11");
-
+  
 client.sendEmail({
   "From": "ncby9zfs7@vossie.net",
   "To": "ncby9zfs7@vossie.net",
@@ -28,6 +28,8 @@ client.sendEmail({
   "TextBody": "Hello from Postmark!",
   "MessageStream": "notifications-1"
 });
+
+res.send("Hello")
 
 })
 
