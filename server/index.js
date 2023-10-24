@@ -54,6 +54,9 @@ function sendEmail(recipientEmail, pdfPath) {
     });
   });
 }
+app.get("/", (req,res)=>{
+  res.send("Welcome to my server")
+})
 
 app.use('/send-email', async (req, res) => {
   res.send("Hello Yams")
@@ -293,9 +296,7 @@ app.use('/send-email', async (req, res) => {
   }
 });
 
-app.get("/", (req,res)=>{
-  res.send("Welcome to my server")
-})
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
