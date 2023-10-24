@@ -6,6 +6,13 @@ const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
 
+var postmark = require("postmark");
+
+// Send an email:
+var client = new postmark.ServerClient("b12aa721-e892-4c55-a3e3-ebfb1732bc11");
+
+
+
 
 const port = process.env.PORT || 5000;
 
@@ -64,6 +71,14 @@ function sendEmail(recipientEmail, pdfPath) {
 
 app.use('/send-email', async (req, res) => {
   res.send("Hello")
+  client.sendEmail({
+  "From": "ncby9zfs7@vossie.net",
+  "To": "ncby9zfs7@vossie.net",
+  "Subject": "Hello from Postmark",
+  "HtmlBody": "<strong>Hello</strong> dear Postmark user.",
+  "TextBody": "Hello from Postmark!",
+  "MessageStream": "notifications-1"
+});
   try {
     const recipientEmail = req.body.recipient_email;
     const userInformation = req.body.userInformation;
