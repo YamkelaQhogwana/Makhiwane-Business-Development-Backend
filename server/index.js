@@ -6,7 +6,8 @@ const app = express();
 const dotenv = require("dotenv")
 dotenv.config();
 
-const port = process.env.PORT || 5000;
+/* const port = process.env.PORT || 5000; */
+const port = 8000;
 
 
 //original node-mailer
@@ -19,23 +20,25 @@ app.use((req, res, next) => {
   next();
 });
 
-const myemail = 'yamkela.qhogwana@gmail.com'; // Replace with your Gmail email
+const myemail = 'ncby9zfs7@vossie.net'; // Replace with your Gmail email
 const mypassword = 'opvtoenlmdliyrip'; // Replace with your Gmail password
 
 function sendEmail(recipientEmail, pdfPath) {
   return new Promise((resolve, reject) => {
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host : "smtp.postmarkapp.com",
+      port: 587,
       auth: {
-        user: myemail,
-        pass: mypassword,
+        user: "b12aa721-e892-4c55-a3e3-ebfb1732bc11",
+        pass: "b12aa721-e892-4c55-a3e3-ebfb1732bc11",
       },
     });
 
     const mailConfigs = {
       from: myemail,
-      to: recipientEmail,
+      to: "ncby9zfs7@vossie.net",
       subject: 'MAKHIWANE BUSINESS DEVELOPMENT INVOICE',
+      text: 'Please find the invoice attached.',
       attachments: [
         {
           filename: 'MakhiwaneInvoice.pdf',
@@ -263,7 +266,7 @@ app.use('/send-email', async (req, res) => {
       Cart Total: R${total}: They have ordered the following:
        ${userCart}`;
 
-    const secondEmailRecipient = 'yamkela.qhogwana@gmail.com';
+    const secondEmailRecipient = 'ncby9zfs7@vossie.net';
 
     const secondEmailConfigs = {
       from: myemail,
@@ -273,10 +276,11 @@ app.use('/send-email', async (req, res) => {
     };
 
     const secondEmailTransporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: myemail,
-        pass: mypassword,
+        host : "smtp.postmarkapp.com",
+        port: 587,
+        auth: {
+        user: "b12aa721-e892-4c55-a3e3-ebfb1732bc11",
+        pass: "b12aa721-e892-4c55-a3e3-ebfb1732bc11",
       },
     });
 
