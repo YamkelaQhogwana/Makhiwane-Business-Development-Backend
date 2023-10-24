@@ -4,14 +4,12 @@ const express = require("express");
 const app =express();
 const cors = require("cors");
 const port = 5000;
+var bodyParser = require('body-parser');
 var client = new postmark.ServerClient("b12aa721-e892-4c55-a3e3-ebfb1732bc11");
 
-app.use(bodyParser.json()); // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded());
+app.use(express.urlencoded({extended: true})); 
+app.use(express.json()); 
 
-
-app.use(express.json({ limit: '25mb' }));
-app.use(express.urlencoded({ limit: '25mb' }));
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   next();
