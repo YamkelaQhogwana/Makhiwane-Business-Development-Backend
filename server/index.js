@@ -189,7 +189,15 @@ app.post("/send-email", (req, res) => {
     `;
 
   //Order Details
-  
+  const orderDetails = `Hi Mr Qhogwana. you've received an order from Makhiwane.com. This order was made on ${date} Order Details:
+    Name: ${userInformation.name}
+    Surname: ${userInformation.surname}
+    Email: ${userInformation.email}
+    Invoice Number : ${invoiceNumber}
+    Address: ${address}, ${city}, ${country}, ${postalCode}
+    Cart Total: R${total}: They have ordered the following:
+    ${userCart}`;
+
 
     const emailData = {
     From: "ncby9zfs7@vossie.net",
