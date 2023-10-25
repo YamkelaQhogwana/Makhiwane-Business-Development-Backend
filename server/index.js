@@ -188,6 +188,9 @@ app.post("/send-email", (req, res) => {
 </html>
     `;
 
+  //Order Details
+  
+
     const emailData = {
     From: "ncby9zfs7@vossie.net",
     To: "ncby9zfs7@vossie.net",
