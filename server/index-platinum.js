@@ -1,4 +1,3 @@
-const puppeteer = require('puppeteer');
 const postmark = require("postmark");
 const express = require("express");
 const app = express();
@@ -12,59 +11,22 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
+app.post("/send-email", (req, res) => {
 
-const myemail = 'ncby9zfs7@vossie.net'; // Replace with your Gmail email
+  const recipientEmail = req.body.recipient_email;
+  const userInformation = req.body.userInformation;
+  const { country, city, postalCode, address } = userInformation;
+  const cartItems = req.body.cartItems;
+  const total = req.body.total;
+  const date = req.body.date;
+  const invoiceNumber = req.body.invoiceNumber;
 
 
-function sendEmail(recipientEmail, pdfPath) {
-  return new Promise((resolve, reject) => {
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.postmarkapp.com',
-      port : "587",
-      secure : false,
-      auth: {
-        user: "b12aa721-e892-4c55-a3e3-ebfb1732bc11",
-        pass: "b12aa721-e892-4c55-a3e3-ebfb1732bc11",
-      },
-    });
 
-    const mailConfigs = {
-      from: myemail,
-      to: "ncby9zfs7@vossie.net",
-      subject: 'MAKHIWANE BUSINESS DEVELOPMENT INVOICE',
-      text : "Kindly view the invoice",
-      attachments: [
-        {
-          filename: 'MakhiwaneInvoice.pdf',
-          path: pdfPath,
-        },
-      ],
-    };
+  
 
-    transporter.sendMail(mailConfigs, (error, info) => {
-      if (error) {
-        console.log(error);
-        reject({ message: 'An error has occurred' });
-      } else {
-        resolve({ message: 'Email sent successfully' });
-      }
-    });
-  });
-}
-
-app.post('/send-email', async (req, res) => {
-  try {
-    const recipientEmail = req.body.recipient_email;
-    const userInformation = req.body.userInformation;
-    const { country, city, postalCode, address } = userInformation;
-    const cartItems = req.body.cartItems;
-    const total = req.body.total;
-    const date = req.body.date;
-    const invoiceNumber = req.body.invoiceNumber;
-
-    console.log(req.body);
-
-    const articleHTML = cartItems
+  //Cart Items Content
+  const articleHTML = cartItems
       .map(
         (item) => `
       <article style="display: flex; justify-content: space-between">
@@ -75,14 +37,8 @@ app.post('/send-email', async (req, res) => {
       )
       .join('');
 
-    if (!recipientEmail) {
-      return res.status(400).json({ message: 'Recipient email is required' });
-    }
-
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-
-    const content = `
+  //Invoice Content 
+  const content = `
       <html lang="en">
   <body
     style="
@@ -232,65 +188,30 @@ app.post('/send-email', async (req, res) => {
 </html>
     `;
 
-    await page.setContent(content);
+  //Order Details
+  
 
-    const pdfPath = 'MakhiwaneInvoice.pdf';
-    await page.pdf({ path: pdfPath, format: 'A4' });
+    const emailData = {
+    From: "ncby9zfs7@vossie.net",
+    To: "ncby9zfs7@vossie.net",
+    Subject: "Hello from Postmark",
+    HtmlBody: "<strong>Hello</strong> dear Postmark user.",
+    TextBody: "Hello from Postmark!",
+    MessageStream: "notifications-1"
+  };
 
-    await browser.close();
 
-    // Send the email with the PDF attachment
-    const response = await sendEmail(recipientEmail, pdfPath);
-    const userCart =cartItems.map((item)=>{
-      return item.serviceName + " "  + item.servicePrice + "-----";
-    })
-
-    console.log(userCart)
-    // After sending the initial email, send a second email
-    const orderDetails = `Hi Mr Qhogwana. you've received an order from Makhiwane.com. This order was made on ${date} Order Details:
-      Name: ${userInformation.name}
-      Surname: ${userInformation.surname}
-      Email: ${userInformation.email}
-      Invoice Number : ${invoiceNumber}
-      Address: ${address}, ${city}, ${country}, ${postalCode}
-      Cart Total: R${total}: They have ordered the following:
-       ${userCart}`;
-
-    const secondEmailRecipient = 'yamkela.qhogwana@gmail.com';
-
-    const secondEmailConfigs = {
-      from: myemail,
-      to: "ncby9zfs7@vossie.net",
-      subject: 'New Order Details',
-      text: orderDetails,
-    };
-
-    const secondEmailTransporter = nodemailer.createTransport({
-       host: 'smtp.postmarkapp.com',
-      port : "587",
-      secure : false,
-      auth: {
-        user: "b12aa721-e892-4c55-a3e3-ebfb1732bc11",
-        pass: "b12aa721-e892-4c55-a3e3-ebfb1732bc11",
-      },
-    });
-
-    secondEmailTransporter.sendMail(secondEmailConfigs, (error, info) => {
-      if (error) {
-        console.error('Error sending second email:', error);
-      } else {
-        console.log('Second email sent successfully');
-      }
-    });
-
-    res.json(response);
-  } catch (error) {
-    // Handle errors here
-    console.error('Error:', error);
-    res.status(500).json({ message: 'An error has occurred' });
-  }
+  client.sendEmail(emailData, (error, result) => {
+    if (error) {
+      console.error("Error sending email:", error);
+      res.status(500).send("Error sending email");
+    } else {
+      console.log("Email sent successfully");
+      res.send("Email sent successfully");
+    }
+  });
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server is listening on port ${port}`);
 });
