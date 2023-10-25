@@ -23,14 +23,7 @@ app.post("/send-email", (req, res) => {
 
 
 
-  const emailData = {
-    From: "ncby9zfs7@vossie.net",
-    To: "ncby9zfs7@vossie.net",
-    Subject: "Hello from Postmark",
-    HtmlBody: "<strong>Hello</strong> dear Postmark user.",
-    TextBody: "Hello from Postmark!",
-    MessageStream: "notifications-1"
-  };
+  
 
   //Cart Items Content
   const articleHTML = cartItems
@@ -194,6 +187,15 @@ app.post("/send-email", (req, res) => {
   </body>
 </html>
     `;
+
+    const emailData = {
+    From: "ncby9zfs7@vossie.net",
+    To: "ncby9zfs7@vossie.net",
+    Subject: "Hello from Postmark",
+    HtmlBody: "<strong>Hello</strong> dear Postmark user.",
+    TextBody: "Hello from Postmark!",
+    MessageStream: "notifications-1"
+  };
 
 
   client.sendEmail(emailData, (error, result) => {
