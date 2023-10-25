@@ -218,6 +218,8 @@ app.post("/send-email", (req, res) => {
       res.send("Email sent successfully");
     }
   });
+
+  res.send(userInformation);
 });
 
 app.listen(port, () => {
