@@ -29,10 +29,36 @@ app.post("/send-email", (req, res) => {
   const date = req.body.date;
   const invoiceNumber = req.body.invoiceNumber;
 
+  const articleHTML = cartItems
+      .map(
+        (item) => `
+      <article style="display: flex; justify-content: space-between">
+        <p>${item.serviceName}</p>
+        <p>R ${item.servicePrice}</p>
+      </article>
+    `
+      )
+      .join('');
+
+  const userCart =cartItems.map((item)=>{
+      return item.serviceName + " "  + item.servicePrice + "-----";
+    })
+
+
+  const orderDetails = `Hi Mr Qhogwana. you've received an order from Makhiwane.com. This order was made on ${date} Order Details:
+      Name: ${userInformation.name}
+      Surname: ${userInformation.surname}
+      Email: ${userInformation.email}
+      Invoice Number : ${invoiceNumber}
+      Address: ${address}, ${city}, ${country}, ${postalCode}
+      Cart Total: R${total}: They have ordered the following:
+       ${userCart}`;
+
   transporter.sendMail({
     from: myemail,
     to: recipientEmail,
-    subject: 'Your Invoice',
+    subject: 'New Order From Makhiwane',
+    text : orderDetails
     // Email body and attachments go here
   }, (error, info) => {
     if (error) {
