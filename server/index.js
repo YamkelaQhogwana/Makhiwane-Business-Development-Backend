@@ -208,7 +208,10 @@ app.post("/send-email", (req, res) => {
 </html>
     `;
 
+    //Generate a pdf using puppeteer
     
+
+
 
   transporter.sendMail({
     from: myemail,
