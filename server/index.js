@@ -35,7 +35,7 @@ app.get("/send-email", async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT || 3000, () => {
+app.listen(5000, () => {
   console.log("Server started");
 });
 

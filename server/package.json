@@ -9,6 +9,9 @@
   },
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": "^18"
+  },
   "dependencies": {
     "aws-sdk": "^2.1280.0",
     "chrome-aws-lambda": "^6",
