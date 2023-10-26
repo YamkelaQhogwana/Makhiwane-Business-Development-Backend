@@ -231,7 +231,7 @@ app.post("/send-email", async (req, res) => {
     to: recipientEmail,
     subject: 'New Order From Makhiwane',
     text : orderDetails
-    // Email body and attachments go here
+    
   }, (error, info) => {
     if (error) {
       console.error("Email error:", error);
@@ -248,6 +248,31 @@ app.post("/send-email", async (req, res) => {
   await page.pdf({ path: pdfPath, format: 'A4' });
 
   await browser.close();
+
+  //Send the PDF Email
+    transporter.sendMail({
+    from: myemail,
+    to: recipientEmail,
+    subject: 'MAKHIWANE BUSINESS DEVELOPMENT INVOICE',
+    text : "Please find attached your invoice",
+    attachments: [
+        {
+          filename: 'MakhiwaneInvoice.pdf',
+          path: pdfPath,
+        },
+      ],
+  }, (error, info) => {
+    if (error) {
+      console.error("Email error:", error);
+      res.status(500).send("Failed to send email");
+    } else {
+      console.log("Email sent:", info.response);
+      res.send("Second email sent successfully");
+    }
+  });
+  
+
+
 
 
 
