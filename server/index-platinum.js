@@ -1,18 +1,30 @@
-const postmark = require("postmark");
 const express = require("express");
 const app = express();
 const cors = require("cors");
 const port = 5000;
-const bodyParser = require('body-parser');
-const client = new postmark.ServerClient("b12aa721-e892-4c55-a3e3-ebfb1732bc11");
+const nodemailer = require("nodemailer");
+const { default: puppeteer } = require("puppeteer");
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-app.post("/send-email", (req, res) => {
+const myemail = 'yamkela.qhogwana@gmail.com'; 
+const mypassword = 'opvtoenlmdliyrip'; 
 
+// Create the transporter
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: myemail,
+    pass: mypassword,
+  },
+});
+
+//puppeteer
+
+
+app.post("/send-email", (req, res) => {
   const recipientEmail = req.body.recipient_email;
   const userInformation = req.body.userInformation;
   const { country, city, postalCode, address } = userInformation;
@@ -21,11 +33,7 @@ app.post("/send-email", (req, res) => {
   const date = req.body.date;
   const invoiceNumber = req.body.invoiceNumber;
 
-
-
-  
-
-  //Cart Items Content
+  //cart Items
   const articleHTML = cartItems
       .map(
         (item) => `
@@ -36,9 +44,25 @@ app.post("/send-email", (req, res) => {
     `
       )
       .join('');
+  
+  //cart items for the owner
 
-  //Invoice Content 
-  const content = `
+  const userCart =cartItems.map((item)=>{
+      return item.serviceName + " "  + item.servicePrice + "-----";
+    })
+
+   //the order details for the owner
+  const orderDetails = `Hi Mr Qhogwana. you've received an order from Makhiwane.com. This order was made on ${date} Order Details:
+      Name: ${userInformation.name}
+      Surname: ${userInformation.surname}
+      Email: ${userInformation.email}
+      Invoice Number : ${invoiceNumber}
+      Address: ${address}, ${city}, ${country}, ${postalCode}
+      Cart Total: R${total}: They have ordered the following:
+       ${userCart}`;
+
+  //the invoice details
+   const content = `
       <html lang="en">
   <body
     style="
@@ -188,30 +212,41 @@ app.post("/send-email", (req, res) => {
 </html>
     `;
 
-  //Order Details
-  
-
-    const emailData = {
-    From: "ncby9zfs7@vossie.net",
-    To: "ncby9zfs7@vossie.net",
-    Subject: "Hello from Postmark",
-    HtmlBody: "<strong>Hello</strong> dear Postmark user.",
-    TextBody: "Hello from Postmark!",
-    MessageStream: "notifications-1"
-  };
+    //Generate a pdf using puppeteer
+    
 
 
-  client.sendEmail(emailData, (error, result) => {
+
+  transporter.sendMail({
+    from: myemail,
+    to: recipientEmail,
+    subject: 'New Order From Makhiwane',
+    text : orderDetails
+    // Email body and attachments go here
+  }, (error, info) => {
     if (error) {
-      console.error("Error sending email:", error);
-      res.status(500).send("Error sending email");
+      console.error("Email error:", error);
+      res.status(500).send("Failed to send email");
     } else {
-      console.log("Email sent successfully");
+      console.log("Email sent:", info.response);
       res.send("Email sent successfully");
     }
   });
+/* 
+  const browser = puppeteer.launch();
+  const page = browser.newPage(); */
+
+
+
+
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
 
 app.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });

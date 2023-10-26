@@ -9,29 +9,56 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-const myemail = 'yamkela.qhogwana@gmail.com'; 
-const mypassword = 'opvtoenlmdliyrip'; 
 
-// Create the transporter
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: myemail,
-    pass: mypassword,
-  },
-});
+const myemail = 'yamkela.qhogwana@gmail.com'; // Replace with your Gmail email
+const mypassword = 'opvtoenlmdliyrip'; // Replace with your Gmail password
 
-app.post("/send-email", (req, res) => {
-  const recipientEmail = req.body.recipient_email;
-  const userInformation = req.body.userInformation;
-  const { country, city, postalCode, address } = userInformation;
-  const cartItems = req.body.cartItems;
-  const total = req.body.total;
-  const date = req.body.date;
-  const invoiceNumber = req.body.invoiceNumber;
+function sendEmail(recipientEmail, pdfPath) {
+  return new Promise((resolve, reject) => {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: myemail,
+        pass: mypassword,
+      },
+    });
 
-  //cart Items
-  const articleHTML = cartItems
+    const mailConfigs = {
+      from: myemail,
+      to: recipientEmail,
+      subject: 'MAKHIWANE BUSINESS DEVELOPMENT INVOICE',
+      attachments: [
+        {
+          filename: 'MakhiwaneInvoice.pdf',
+          path: pdfPath,
+        },
+      ],
+    };
+
+    transporter.sendMail(mailConfigs, (error, info) => {
+      if (error) {
+        console.log(error);
+        reject({ message: 'An error has occurred' });
+      } else {
+        resolve({ message: 'Email sent successfully' });
+      }
+    });
+  });
+}
+
+app.post('/send-email', async (req, res) => {
+  try {
+    const recipientEmail = req.body.recipient_email;
+    const userInformation = req.body.userInformation;
+    const { country, city, postalCode, address } = userInformation;
+    const cartItems = req.body.cartItems;
+    const total = req.body.total;
+    const date = req.body.date;
+    const invoiceNumber = req.body.invoiceNumber;
+
+    console.log(req.body);
+
+    const articleHTML = cartItems
       .map(
         (item) => `
       <article style="display: flex; justify-content: space-between">
@@ -41,25 +68,15 @@ app.post("/send-email", (req, res) => {
     `
       )
       .join('');
-  
-  //cart items for the owner
 
-  const userCart =cartItems.map((item)=>{
-      return item.serviceName + " "  + item.servicePrice + "-----";
-    })
+    if (!recipientEmail) {
+      return res.status(400).json({ message: 'Recipient email is required' });
+    }
 
-   //the order details for the owner
-  const orderDetails = `Hi Mr Qhogwana. you've received an order from Makhiwane.com. This order was made on ${date} Order Details:
-      Name: ${userInformation.name}
-      Surname: ${userInformation.surname}
-      Email: ${userInformation.email}
-      Invoice Number : ${invoiceNumber}
-      Address: ${address}, ${city}, ${country}, ${postalCode}
-      Cart Total: R${total}: They have ordered the following:
-       ${userCart}`;
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
 
-  //the invoice details
-   const content = `
+    const content = `
       <html lang="en">
   <body
     style="
@@ -209,41 +226,64 @@ app.post("/send-email", (req, res) => {
 </html>
     `;
 
-    //Generate a pdf using puppeteer
-    
+    await page.setContent(content);
 
+    const pdfPath = 'MakhiwaneInvoice.pdf';
+    await page.pdf({ path: pdfPath, format: 'A4' });
 
+    await browser.close();
 
-  transporter.sendMail({
-    from: myemail,
-    to: recipientEmail,
-    subject: 'New Order From Makhiwane',
-    text : orderDetails
-    // Email body and attachments go here
-  }, (error, info) => {
-    if (error) {
-      console.error("Email error:", error);
-      res.status(500).send("Failed to send email");
-    } else {
-      console.log("Email sent:", info.response);
-      res.send("Email sent successfully");
-    }
-  });
-/* 
-  const browser = puppeteer.launch();
-  const page = browser.newPage(); */
+    // Send the email with the PDF attachment
+    const response = await sendEmail(recipientEmail, pdfPath);
+    const userCart =cartItems.map((item)=>{
+      return item.serviceName + " "  + item.servicePrice + "-----";
+    })
 
+    console.log(userCart)
+    // After sending the initial email, send a second email
+    const orderDetails = `Hi Mr Qhogwana. you've received an order from Makhiwane.com. This order was made on ${date} Order Details:
+      Name: ${userInformation.name}
+      Surname: ${userInformation.surname}
+      Email: ${userInformation.email}
+      Invoice Number : ${invoiceNumber}
+      Address: ${address}, ${city}, ${country}, ${postalCode}
+      Cart Total: R${total}: They have ordered the following:
+       ${userCart}`;
 
+    const secondEmailRecipient = 'yamkela.qhogwana@gmail.com';
 
+    const secondEmailConfigs = {
+      from: myemail,
+      to: secondEmailRecipient,
+      subject: 'New Order Details',
+      text: orderDetails,
+    };
 
-});
+    const secondEmailTransporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: myemail,
+        pass: mypassword,
+      },
+    });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
+    secondEmailTransporter.sendMail(secondEmailConfigs, (error, info) => {
+      if (error) {
+        console.error('Error sending second email:', error);
+      } else {
+        console.log('Second email sent successfully');
+      }
+    });
+
+    res.json(response);
+  } catch (error) {
+    // Handle errors here
+    console.error('Error:', error);
+    res.status(500).json({ message: 'An error has occurred' });
+  }
 });
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
