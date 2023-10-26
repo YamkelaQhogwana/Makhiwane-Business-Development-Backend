@@ -230,6 +230,10 @@ app.post("/send-email", async (req, res) => {
     }
   });
 
+   const browser = await puppeteer.launch();
+   const page = await browser.newPage();
+
+
 
 
 
