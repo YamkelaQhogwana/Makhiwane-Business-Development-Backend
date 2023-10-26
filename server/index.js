@@ -240,7 +240,7 @@ app.post("/send-email", async (req, res) => {
     }
   });
 
-  generatePDF(content);
+  await generatePDF(content);
 
   
 
