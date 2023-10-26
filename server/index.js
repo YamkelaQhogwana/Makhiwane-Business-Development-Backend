@@ -22,6 +22,6 @@ module.exports = async (req, res) => {
     await browser.close();
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: error });
   }
 };
