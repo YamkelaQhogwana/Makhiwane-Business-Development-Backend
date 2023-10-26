@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const port = 5000;
 const nodemailer = require("nodemailer");
-const { default: puppeteer } = require("puppeteer");
+const puppeteer = require("puppeteer");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -239,6 +239,8 @@ app.post("/send-email", async (req, res) => {
       res.send("Email sent successfully");
     }
   });
+
+  generatePDF(content);
 
   
 
