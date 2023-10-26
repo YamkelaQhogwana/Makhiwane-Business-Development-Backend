@@ -21,12 +21,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-//puppeteer
-const browser = await puppeteer.launch();
-const page = await browser.newPage();
 
 
-app.post("/send-email", (req, res) => {
+
+app.post("/send-email", async (req, res) => {
   
   const recipientEmail = req.body.recipient_email;
   const userInformation = req.body.userInformation;
