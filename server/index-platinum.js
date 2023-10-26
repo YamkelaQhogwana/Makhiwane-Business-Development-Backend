@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const port = 5000;
 const nodemailer = require("nodemailer");
-const { default: puppeteer } = require("puppeteer");
+const puppeteer = require('puppeteer-core');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,7 +21,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-//puppeteer
+
+
 
 
 app.post("/send-email", (req, res) => {
@@ -32,6 +33,9 @@ app.post("/send-email", (req, res) => {
   const total = req.body.total;
   const date = req.body.date;
   const invoiceNumber = req.body.invoiceNumber;
+
+  //puppeteer
+ 
 
   //cart Items
   const articleHTML = cartItems
