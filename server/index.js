@@ -24,7 +24,7 @@ const transporter = nodemailer.createTransport({
 //puppeteer
 
 
-app.post("/send-email", async (req, res) => {
+app.post("/send-email", (req, res) => {
   
   const recipientEmail = req.body.recipient_email;
   const userInformation = req.body.userInformation;
@@ -34,7 +34,6 @@ app.post("/send-email", async (req, res) => {
   const date = req.body.date;
   const invoiceNumber = req.body.invoiceNumber;
 
-  res.send(userInformation)
 
   //cart Items
   const articleHTML = cartItems
