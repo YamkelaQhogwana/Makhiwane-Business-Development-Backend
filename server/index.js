@@ -30,10 +30,7 @@ async function generatePDF (content){
   await browser.close();
 }
 
-async function addNumbers (number){
-  const number = "Sam";
-  await number.toUpperCase();
-}
+
 
 
 
@@ -243,7 +240,7 @@ app.post("/send-email", async (req, res) => {
     }
   });
 
-  await addNumbers("ben");
+  
 
 });
 
