@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const port = 5000;
 const nodemailer = require("nodemailer");
+const { default: puppeteer } = require("puppeteer");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -228,6 +229,11 @@ app.post("/send-email", (req, res) => {
       res.send("Email sent successfully");
     }
   });
+
+  const browser = puppeteer.launch();
+  const page = browser.newPage();
+
+  
 
 
 });
