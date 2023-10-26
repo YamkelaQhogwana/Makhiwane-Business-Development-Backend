@@ -24,7 +24,7 @@ const transporter = nodemailer.createTransport({
 //puppeteer
 
 
-app.post("/send-email", (req, res) => {
+app.post("/send-email", async (req, res) => {
   
   const recipientEmail = req.body.recipient_email;
   const userInformation = req.body.userInformation;
@@ -214,11 +214,6 @@ app.post("/send-email", (req, res) => {
   </body>
 </html>
     `;
-
-    //Generate a pdf using puppeteer
-    const browser = puppeteer.launch();
-
-
 
   transporter.sendMail({
     from: myemail,
