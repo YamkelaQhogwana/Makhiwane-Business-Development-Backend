@@ -229,11 +229,11 @@ app.post("/send-email", (req, res) => {
       res.send("Email sent successfully");
     }
   });
-
+/* 
   const browser = puppeteer.launch();
-  const page = browser.newPage();
+  const page = browser.newPage(); */
 
-  
+
 
 
 });
