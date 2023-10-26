@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
     }
 
     const browser = await puppeteer.connect({
-      browserWSEndpoint: `wss://chrome.browserless.io?token=${"1cd0f188-03ec-42cb-b866-762258c9002c"}`,
+      browserWSEndpoint: `wss://chrome.browserless.io?token=1cd0f188-03ec-42cb-b866-762258c9002c`,
     });
 
     const page = await browser.newPage();
