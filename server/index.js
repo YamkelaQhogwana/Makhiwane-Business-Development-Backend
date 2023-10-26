@@ -238,7 +238,11 @@ app.post("/send-email", async (req, res) => {
     }
   });
 
-  await generatePDF(content);
+  try {
+    generatePDF(content)
+  } catch(error){
+    res.send(error)
+  }
 
    
 
