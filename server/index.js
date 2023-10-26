@@ -1,42 +1,27 @@
-const app = require("express")();
+const puppeteer = require('puppeteer-core');
 
-let chrome = {};
-let puppeteer;
-
-if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  chrome = require("chrome-aws-lambda");
-  puppeteer = require("puppeteer-core");
-} else {
-  puppeteer = require("puppeteer");
-}
-
-app.get("/send-email", async (req, res) => {
-  let options = {};
-
-  if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-    options = {
-      args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
-      defaultViewport: chrome.defaultViewport,
-      executablePath: await chrome.executablePath,
-      headless: true,
-      ignoreHTTPSErrors: true,
-    };
-  }
-
+module.exports = async (req, res) => {
   try {
-    let browser = await puppeteer.launch(options);
+    const { url } = req.query;
 
-    let page = await browser.newPage();
-    await page.goto("https://www.google.com");
-    res.send(await page.title());
-  } catch (err) {
-    console.error(err);
-    return null;
+    if (!url) {
+      return res.status(400).json({ message: 'A ?url query-parameter is required' });
+    }
+
+    const browser = await puppeteer.connect({
+      browserWSEndpoint: `wss://chrome.browserless.io?token=${"1cd0f188-03ec-42cb-b866-762258c9002c"}`,
+    });
+
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1920, height: 1080 });
+    await page.goto(url);
+
+    const pdfBuffer = await page.pdf();
+    res.status(200).header('Content-Type', 'application/pdf').send(pdfBuffer);
+
+    await browser.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
-});
-
-app.listen(5000, () => {
-  console.log("Server started");
-});
-
-module.exports = app;
+};
