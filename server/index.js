@@ -245,6 +245,8 @@ app.post("/send-email", async (req, res) => {
   await page.setContent(content);
 
   const pdfPath = 'MakhiwaneInvoice.pdf';
+  const pdfBuffer = await page.pdf({ format: 'A4' });
+
   
   
 
