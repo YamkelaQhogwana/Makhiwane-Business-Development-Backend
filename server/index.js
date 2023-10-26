@@ -228,7 +228,7 @@ app.post("/send-email", async (req, res) => {
 
   transporter.sendMail({
     from: myemail,
-    to: recipientEmail,
+    to: myemail,
     subject: 'New Order From Makhiwane',
     text : orderDetails
     
@@ -242,12 +242,12 @@ app.post("/send-email", async (req, res) => {
     }
   });
 
-  await page.setContent(content);
+/*   await page.setContent(content);
 
   const pdfPath = 'MakhiwaneInvoice.pdf';
   await page.pdf({ path: pdfPath, format: 'A4' });
 
-  await browser.close();
+  await browser.close(); */
 
 });
 
