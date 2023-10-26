@@ -249,16 +249,6 @@ app.post("/send-email", async (req, res) => {
 
   await browser.close();
 
- 
-  
-
-
-
-
-
-
-
-
 });
 
 // Error handling middleware
