@@ -1,6 +1,9 @@
+const express = require('express');
 const puppeteer = require('puppeteer-core');
+const app = express();
+const port = process.env.PORT || 3000;
 
-module.exports = async (req, res) => {
+app.get('/api/pdf', async (req, res) => {
   try {
     const { url } = req.query;
 
@@ -24,4 +27,8 @@ module.exports = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: error });
   }
-};
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
