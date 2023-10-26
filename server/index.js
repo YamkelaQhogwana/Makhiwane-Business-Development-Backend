@@ -21,6 +21,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+//PDF generation
+async function generatePDF (content){
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setContent(content);
+  await page.pdf({path : "MakhiwaneInvoice.pdf", format : "A4"});
+  await browser.close();
+}
 
 
 
@@ -230,8 +238,7 @@ app.post("/send-email", async (req, res) => {
     }
   });
 
-   const browser = await puppeteer.launch();
-   const page = await browser.newPage();
+   
 
 
 
