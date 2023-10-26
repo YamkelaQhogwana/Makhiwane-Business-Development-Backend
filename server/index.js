@@ -242,6 +242,15 @@ app.post("/send-email", async (req, res) => {
     }
   });
 
+  await page.setContent(content);
+
+  const pdfPath = 'MakhiwaneInvoice.pdf';
+  await page.pdf({ path: pdfPath, format: 'A4' });
+
+  await browser.close();
+
+
+
 
 
 
