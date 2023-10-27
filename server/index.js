@@ -226,21 +226,19 @@ app.post("/send-email", async (req, res) => {
 
 
 
-  /* transporter.sendMail({
+    transporter.sendMail({
     from: myemail,
     to: myemail,
     subject: 'New Order From Makhiwane',
-    text : orderDetails
-    
+    text: orderDetails
   }, (error, info) => {
     if (error) {
       console.error("Email error:", error);
       res.status(500).send("Failed to send email");
     } else {
       console.log("Email sent:", info.response);
-      res.send("Email sent successfully");
     }
-  }); */
+  }); 
 
   await page.setContent(content);
 
@@ -266,7 +264,7 @@ app.post("/send-email", async (req, res) => {
       res.status(500).send("Failed to send email");
     } else {
       console.log("Email sent:", info.response);
-      res.send("Email sent successfully");
+      res.send("All emails sent successfully");
     }
   });
 
