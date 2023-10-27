@@ -226,7 +226,7 @@ app.post("/send-email", async (req, res) => {
 
 
 
-  transporter.sendMail({
+  /* transporter.sendMail({
     from: myemail,
     to: myemail,
     subject: 'New Order From Makhiwane',
@@ -240,7 +240,7 @@ app.post("/send-email", async (req, res) => {
       console.log("Email sent:", info.response);
       res.send("Email sent successfully");
     }
-  });
+  }); */
 
   await page.setContent(content);
 
