@@ -221,12 +221,15 @@ app.post("/send-email", async (req, res) => {
 </html>
     `;
 
-    //Generate a pdf using puppeteer
-    
 
 
+  
+  await page.setContent(content);
+  const pdfBuffer = await page.pdf({ format: 'A4' });
+  await browser.close();
 
-    transporter.sendMail({
+    const sendOrderEmail = async()=>{
+      transporter.sendMail({
     from: myemail,
     to: myemail,
     subject: 'New Order From Makhiwane',
@@ -238,15 +241,12 @@ app.post("/send-email", async (req, res) => {
     } else {
       console.log("Email sent:", info.response);
     }
-  }); 
+  });
+  }
 
-  await page.setContent(content);
 
-  const pdfPath = 'MakhiwaneInvoice.pdf';
-  const pdfBuffer = await page.pdf({ format: 'A4' });
-  await browser.close();
-  
-  // Send the PDF Email
+  const sendInvoiceEmail = async()=>{
+    // Send the PDF Email
   transporter.sendMail({
     from: myemail,
     to: recipientEmail,
@@ -267,9 +267,11 @@ app.post("/send-email", async (req, res) => {
       res.send("All emails sent successfully");
     }
   });
+  }
 
+  await sendOrderEmail();
+  await sendInvoiceEmail();
   
-
 });
 
 // Error handling middleware
