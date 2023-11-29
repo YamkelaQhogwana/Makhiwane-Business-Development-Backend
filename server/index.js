@@ -9,8 +9,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-const myemail = 'yamkela.qhogwana@gmail.com'; 
-const mypassword = 'opvtoenlmdliyrip'; 
+const myemail = "makhiwanebusinessdevelopment@gmail.com"
+const mypassword = "rwqm iijm uzfr lfqy";
 
 // Create the transporter
 const transporter = nodemailer.createTransport({
@@ -34,33 +34,33 @@ app.post("/send-email", async (req, res) => {
   const date = req.body.date;
   const invoiceNumber = req.body.invoiceNumber;
 
-  
-  //puppeteer
+
+//puppeteer
   const browser = await puppeteer.connect({
-      browserWSEndpoint: `wss://chrome.browserless.io?token=1cd0f188-03ec-42cb-b866-762258c9002c`,
+      browserWSEndpoint: `wss://chrome.browserless.io?token=541a27c3-925f-4384-a69c-a51f8374b575`,
   });
   const page = await browser.newPage();
- 
+
 
   //cart Items
   const articleHTML = cartItems
-      .map(
-        (item) => `
+    .map(
+      (item) => `
       <article style="display: flex; justify-content: space-between">
         <p>${item.serviceName}</p>
         <p>R ${item.servicePrice}</p>
       </article>
     `
-      )
-      .join('');
-  
+    )
+    .join('');
+
   //cart items for the owner
 
-  const userCart =cartItems.map((item)=>{
-      return item.serviceName + " "  + item.servicePrice + "-----";
-    })
+  const userCart = cartItems.map((item) => {
+    return item.serviceName + " " + item.servicePrice + "-----";
+  })
 
-   //the order details for the owner
+  //the order details for the owner
   const orderDetails = `Hi Mr Qhogwana. you've received an order from Makhiwane.com. This order was made on ${date} Order Details:
       Name: ${userInformation.name}
       Surname: ${userInformation.surname}
@@ -71,7 +71,7 @@ app.post("/send-email", async (req, res) => {
        ${userCart}`;
 
   //the invoice details
-   const content = `
+  const content = `
       <html lang="en">
   <body
     style="
@@ -223,55 +223,55 @@ app.post("/send-email", async (req, res) => {
 
 
 
-  
+
   await page.setContent(content);
   const pdfBuffer = await page.pdf({ format: 'A4' });
   await browser.close();
 
-    const sendOrderEmail = async()=>{
-      transporter.sendMail({
-    from: myemail,
-    to: myemail,
-    subject: 'New Order From Makhiwane',
-    text: orderDetails
-  }, (error, info) => {
-    if (error) {
-      console.error("Email error:", error);
-      res.status(500).send("Failed to send email");
-    } else {
-      console.log("Email sent:", info.response);
-    }
-  });
+  const sendOrderEmail = async () => {
+    transporter.sendMail({
+      from: myemail,
+      to: myemail,
+      subject: 'New Order From Makhiwane',
+      text: orderDetails
+    }, (error, info) => {
+      if (error) {
+        console.error("Email error:", error);
+        res.status(500).send("Failed to send email");
+      } else {
+        console.log("Email sent:", info.response);
+      }
+    });
   }
 
 
-  const sendInvoiceEmail = async()=>{
+  const sendInvoiceEmail = async () => {
     // Send the PDF Email
-  transporter.sendMail({
-    from: myemail,
-    to: recipientEmail,
-    subject: 'MAKHIWANE BUSINESS DEVELOPMENT INVOICE',
-    text: "Please find attached your invoice",
-    attachments: [
-      {
-        filename: 'MakhiwaneInvoice.pdf',
-        content: pdfBuffer, // Attach the PDF content
-      },
-    ],
-  }, (error, info) => {
-    if (error) {
-      console.error("Email error:", error);
-      res.status(500).send("Failed to send email");
-    } else {
-      console.log("Email sent:", info.response);
-      res.send("All emails sent successfully");
-    }
-  });
+    transporter.sendMail({
+      from: myemail,
+      to: recipientEmail,
+      subject: 'MAKHIWANE BUSINESS DEVELOPMENT INVOICE',
+      text: "Please find attached your invoice",
+      attachments: [
+        {
+          filename: 'MakhiwaneInvoice.pdf',
+          content: pdfBuffer, // Attach the PDF content
+        },
+      ],
+    }, (error, info) => {
+      if (error) {
+        console.error("Email error:", error);
+        res.status(500).send("Failed to send email");
+      } else {
+        console.log("Email sent:", info.response);
+        res.send("All emails sent successfully");
+      }
+    });
   }
 
   await sendOrderEmail();
   await sendInvoiceEmail();
-  
+
 });
 
 // Error handling middleware
